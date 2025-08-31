@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_item_main"
+            android:icon="@android:drawable/ic_menu_compass"
+            android:title="@string/menu_running"/>
+
+        <item
+            android:id="@+id/nav_item_record"
+            android:icon="@android:drawable/ic_menu_gallery"
+            android:title="@string/menu_record"/>
+
+        <item
+            android:id="@+id/nav_item_music"
+            android:icon="@drawable/ic_music"
+            android:title="@string/menu_music"/>
+
+    </group>
+
+    <item android:title="@string/menu_account">
+        <menu>
+            <item
+                android:id="@+id/nav_item_clearpreferences"
+                android:icon="@android:drawable/ic_popup_sync"
+                android:title="@string/menu_clearpreferences"/>
+
+            <item
+                android:id="@+id/nav_item_signout"
+                android:icon="@android:drawable/ic_menu_close_clear_cancel"
+                android:title="@string/menu_signout"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/menu_ads">
+        <menu>
+            <item
+                android:id="@+id/nav_item_offer"
+                android:icon="@android:drawable/ic_menu_info_details"
+                android:title="@string/menu_offercourse"/>
+        </menu>
+    </item>
+</menu>

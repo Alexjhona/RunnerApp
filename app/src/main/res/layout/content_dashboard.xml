@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/gray_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- ====== TIRA DE MÉTRICAS (rectángulo gris) ====== -->
+        <LinearLayout
+            android:id="@+id/metricsStrip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/metrics_strip_bg"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="false"
+                android:gravity="center">
+
+                <!-- DISTANCE -->
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="1"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/metric_circle_bg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_distance"
+                            android:textSize="11sp"
+                            android:textColor="@color/gray_medium"/>
+
+                        <TextView
+                            android:id="@+id/tvCurrentDistance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="1.25"
+                            android:textColor="@color/gray_dark"
+                            android:textStyle="bold"
+                            android:textSize="22sp"
+                            android:layout_marginTop="2dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/unit_km"
+                            android:textColor="@color/gray_medium"
+                            android:textSize="11sp"/>
+
+                        <TextView
+                            android:id="@+id/tvDistanceRecord"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="20.00"
+                            android:textColor="@color/gray"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </FrameLayout>
+
+                <!-- AVG SPEED -->
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="1"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/metric_circle_bg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_avg_speed"
+                            android:textSize="11sp"
+                            android:textColor="@color/gray_medium"/>
+
+                        <TextView
+                            android:id="@+id/tvCurrentAvgSpeed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="5.40"
+                            android:textColor="@color/gray_dark"
+                            android:textStyle="bold"
+                            android:textSize="22sp"
+                            android:layout_marginTop="2dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/unit_kmh"
+                            android:textColor="@color/gray_medium"
+                            android:textSize="11sp"/>
+
+                        <TextView
+                            android:id="@+id/tvAvgSpeedRecord"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="12.00"
+                            android:textColor="@color/gray"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </FrameLayout>
+
+                <!-- SPEED -->
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="1"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/metric_circle_bg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_speed"
+                            android:textSize="11sp"
+                            android:textColor="@color/gray_medium"/>
+
+                        <TextView
+                            android:id="@+id/tvCurrentSpeed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="0.00"
+                            android:textColor="@color/gray_dark"
+                            android:textStyle="bold"
+                            android:textSize="22sp"
+                            android:layout_marginTop="2dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/unit_kmh"
+                            android:textColor="@color/gray_medium"
+                            android:textSize="11sp"/>
+
+                        <TextView
+                            android:id="@+id/tvMaxSpeedRecord"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="20.00"
+                            android:textColor="@color/gray"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ====== PASOS (debajo de la tira de métricas) ====== -->
+        <TextView
+            android:id="@+id/tvSteps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PASOS: 0"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"/>
+
+        <!-- ====== LÍNEA SUPERIOR ====== -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/white"
+            android:alpha="0.9" />
+
+        <!-- ====== PANEL CRONÓMETRO ====== -->
+        <LinearLayout
+            android:id="@+id/chronoPanel"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:background="@drawable/card_chrono"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+
+            <TextView
+                android:id="@+id/tvChrono"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/init_stop_watch_value"
+                android:textColor="@color/chrono_running"
+                android:textSize="40sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvRound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Round 1"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <!-- ====== LÍNEA INFERIOR ====== -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/white"
+            android:alpha="0.9" />
+
+        <!-- ====== MAPA como chip corto con borde ====== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/btnMap"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:gravity="center_vertical"
+                android:text="MAPA"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:drawableLeft="@android:drawable/ic_menu_mylocation"
+                android:drawableRight="@android:drawable/arrow_down_float"
+                android:drawablePadding="8dp"
+                android:background="@drawable/map_chip"/>
+        </LinearLayout>
+
+        <!-- ====== START / STOP ====== -->
+        <LinearLayout
+            android:id="@+id/btStart"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:background="@drawable/circle_background_toplay"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/btStartLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- ====== MODOS ====== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:baselineAligned="false"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:id="@+id/lySportBike"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:gravity="center"
+                android:background="@drawable/mode_bg_unselected">
+
+                <ImageView
+                    android:id="@+id/ivSportBike"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_bike"
+                    android:tint="@color/text_secondary"
+                    android:contentDescription="@string/desc_bike_icon"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lySportSkate"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:gravity="center"
+                android:background="@drawable/mode_bg_selected">
+
+                <ImageView
+                    android:id="@+id/ivSportSkate"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_skate"
+                    android:tint="@color/white"
+                    android:contentDescription="@string/desc_skate_icon"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lySportRun"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:gravity="center"
+                android:background="@drawable/mode_bg_unselected">
+
+                <ImageView
+                    android:id="@+id/ivSportRun"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_run"
+                    android:tint="@color/text_secondary"
+                    android:contentDescription="@string/desc_run_icon"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

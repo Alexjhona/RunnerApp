@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#101010"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- ===== Tarjeta métricas (3 circulares) ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- Distancia -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/prog_distance"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="40"
+                    app:trackThickness="6dp"
+                    app:trackColor="#444444"
+                    app:indicatorColor="#FFB300" />
+
+                <TextView
+                    android:id="@+id/txt_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DISTANCIA\n1.40 km"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+
+            <!-- Velocidad media -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/prog_avg_speed"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="52"
+                    app:trackThickness="6dp"
+                    app:trackColor="#444444"
+                    app:indicatorColor="#FFB300" />
+
+                <TextView
+                    android:id="@+id/txt_avg_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VEL. MEDIA\n52.1 km/h"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+
+            <!-- Velocidad máx -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/prog_max_speed"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="47"
+                    app:trackThickness="6dp"
+                    app:trackColor="#444444"
+                    app:indicatorColor="#FFB300" />
+
+                <TextView
+                    android:id="@+id/txt_max_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VEL. MÁX.\n46.7 km/h"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ===== Cronómetro grande ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:gravity="center"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/timer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="#FFFFFF"
+                android:textSize="36sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- ===== Pasos ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:gravity="center"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/step_counter_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pasos: 0"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- ===== Selector de modo (bici / patines / correr) ===== -->
+        <LinearLayout
+            android:id="@+id/mode_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_mode_bike"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/bg_mode_circle"
+                android:contentDescription="Bicicleta"
+                app:srcCompat="@drawable/ic_bike"
+                app:tint="#BDBDBD" />
+
+            <ImageButton
+                android:id="@+id/btn_mode_skate"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_mode_circle"
+                android:contentDescription="Patines"
+                app:srcCompat="@drawable/ic_skate"
+                app:tint="#FFB300" />
+
+            <ImageButton
+                android:id="@+id/btn_mode_run"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/bg_mode_circle"
+                android:contentDescription="Correr"
+                app:srcCompat="@drawable/ic_run"
+                app:tint="#BDBDBD" />
+        </LinearLayout>
+
+        <!-- ===== Botón iniciar/detener ===== -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/start_stop_button"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Iniciar carrera"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#4CAF50" />
+    </LinearLayout>
+</ScrollView>

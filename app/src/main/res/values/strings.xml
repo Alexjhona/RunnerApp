@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">RunnerApp</string>
+    <string name="banner_description">Banner</string>
+    <string name="frase_motivadora">¿Hasta qué nivel eres capaz de llegar?</string>
+    <string name="correo">Correo electrónico</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="iniciar_sesion">Iniciar sesión</string>
+    <string name="olvidaste_contrasena">¿Olvidaste tu contraseña?</string>
+    <string name="google_login">Iniciar con Google</string>
+    <string name="facebook_login">Iniciar con Facebook</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+    <string name="apodo">Apodo (opcional)</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="nav_open">Abrir menú</string>
+    <string name="nav_close">Cerrar menú</string>
+    <string name="musica">Música</string>
+    <string name="menu_running">Inicio</string>
+    <string name="menu_record">Historial</string>
+    <string name="menu_becamepremium">Hacerse Premium</string>
+    <string name="menu_account">Cuenta</string>
+    <string name="menu_clearpreferences">Restablecer ajustes</string>
+    <string name="menu_signout">Cerrar sesión</string>
+    <string name="menu_ads">Anuncio</string>
+    <string name="menu_offercourse">Ofertas / Cursos</string>
+
+    <!-- Ya los tienes así, solo confirmo -->
+    <string name="start">VAVAVA</string>
+    <string name="stop">TATE QUIETO</string>
+    <string name="init_stop_watch_value">00:00:00</string>
+
+    <string name="label_distance">DISTANCE</string>
+    <string name="label_avg_speed">AVG SPEED</string>
+    <string name="label_speed">SPEED</string>
+    <string name="unit_km">KM</string>
+    <string name="unit_kmh">KM/H</string>
+
+    <string name="desc_bike_icon">Icono bicicleta</string>
+    <string name="desc_skate_icon">Icono patines</string>
+    <string name="desc_run_icon">Icono correr</string>
+    <string name="menu_music">Música</string>
+    <string name="music_title">Música</string>
+    <string name="music_add">Agregar canciones</string>
+    <string name="music_empty">Aún no has agregado canciones.</string>
+    <string name="music_now_playing">Reproduciendo:</string>
+    <string name="music_now_playing_fmt">Reproduciendo: %1$s</string>
+
+
+
+
+
+
+</resources>

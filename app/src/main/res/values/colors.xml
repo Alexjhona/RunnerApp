@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores base del tema (usados en themes.xml) -->
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+
+    <!-- Botones Login -->
+    <color name="green_500">#2E7D32</color>
+    <color name="on_green">#FFFFFF</color>
+
+    <!-- Colores básicos -->
+    <color name="white">#FFFFFF</color>
+    <color name="on_white">#121212</color>
+    <color name="stroke_200">#DDDDDD</color>
+
+    <!-- Extras útiles para layout -->
+    <color name="background_dark">#121212</color>
+    <color name="accent_orange">#FFB300</color> <!-- solo una definición -->
+    <color name="error_red">#FF6D6D</color>
+
+    <!-- Pantalla principal -->
+    <color name="app_bg">#101010</color>
+    <color name="card_bg">#222222</color>
+    <color name="card_stroke">#444444</color>
+    <color name="accent_green">#4CAF50</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#BDBDBD</color>
+    <color name="red">#F44336</color>
+
+
+    <!-- Colores adicionales para dashboard -->
+    <color name="orange">#FF9800</color> <!-- Naranja principal -->
+    <color name="chrono_running">#FF5722</color> <!-- Rojo-anaranjado para cronómetro corriendo -->
+    <color name="gray">#9E9E9E</color> <!-- Gris estándar -->
+    <color name="gray_dark">#424242</color> <!-- Fondo oscuro -->
+    <color name="gray_medium">#757575</color> <!-- Texto secundario -->
+    <color name="salmon_dark">#E57373</color> <!-- Para el círculo de velocidad -->
+    <color name="transparent">#00000000</color> <!-- Transparente -->
+
+</resources>
