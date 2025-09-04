@@ -42,21 +42,22 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_item_main -> { // Inicio
-                    showDashboard()
+                R.id.nav_item_achievements -> {
+                    startActivity(Intent(this, AchievementsActivity::class.java))
                     drawer.closeDrawers()
                     true
                 }
-                R.id.nav_item_record -> { // Historial
+                R.id.nav_item_record -> {
                     startActivity(Intent(this, HistorialActivity::class.java))
                     drawer.closeDrawers()
                     true
                 }
                 R.id.nav_item_music -> {
                     startActivity(Intent(this, MusicActivity::class.java))
-                    drawer.closeDrawers(); true
+                    drawer.closeDrawers()
+                    true
                 }
-                R.id.nav_item_signout -> { // Cerrar sesión
+                R.id.nav_item_signout -> {
                     sessionManager.clearSession()
                     val i = Intent(this, LoginActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

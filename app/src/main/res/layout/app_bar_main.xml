@@ -15,5 +15,5 @@
         app:popupTheme="@style/ThemeOverlay.Material3.Light" />
 
     <!-- Aquí usamos tu nuevo dashboard -->
-    <include layout="@layout/content_dashboard"/>
+
 </LinearLayout>

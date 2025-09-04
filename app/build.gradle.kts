@@ -27,22 +27,25 @@ android {
         }
     }
 
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
-
-    buildFeatures { compose = false }
 }
 
 dependencies {
-    // AndroidX base
+    // Base
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.google.material)           // ✅ usa SOLO esta vía catálogo
-
-    // UI / Navegación
+    implementation(libs.google.material)
     implementation(libs.androidx.drawerlayout)
     implementation("androidx.fragment:fragment-ktx:1.8.2")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
@@ -73,8 +76,23 @@ dependencies {
     implementation("androidx.media:media:1.6.0")
     implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
 
-    // Extra UI que ya usabas
+    // Extra UI que usabas
     implementation("me.tankery.lib:circularSeekBar:1.3.2")
+
+    // Compose BOM
+    implementation(platform("androidx.compose:compose-bom:2024.09.00"))
+    implementation("androidx.activity:activity-compose:1.9.2")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation("androidx.compose.material:material-icons-extended") // <- NECESARIO
+
+    // Imágenes en Compose
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation(platform("androidx.compose:compose-bom:2024.09.00"))
+    implementation("androidx.compose.material:material-icons-extended") // 👈 necesario para Icons.Default.*
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     // Tests
     testImplementation(libs.test.junit)

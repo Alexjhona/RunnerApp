@@ -44,7 +44,15 @@
     <string name="music_now_playing">Reproduciendo:</string>
     <string name="music_now_playing_fmt">Reproduciendo: %1$s</string>
 
-
+    <string name="steps_label">PASOS: %1$d</string>
+    <string name="steps_perm_denied">PASOS: permiso denegado</string>
+    <string name="steps_sensor_unavailable">PASOS: sensor no disponible</string>
+    <string name="intervals_enable">Usar intervalos</string>
+    <string name="intervals_work">Trabajo (min)</string>
+    <string name="intervals_rest">Descanso (min)</string>
+    <string name="intervals_off">Intervalos desactivados</string>
+    <string name="intervals_working">Trabajo: %1$s</string>
+    <string name="intervals_resting">Descanso: %1$s</string>
 
 
 
