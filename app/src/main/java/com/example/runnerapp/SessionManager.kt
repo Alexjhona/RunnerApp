@@ -21,6 +21,14 @@ class SessionManager(context: Context) {
         return getUserSession() != null
     }
 
+    fun setProfileCompleted(completed: Boolean) {
+        prefs.edit().putBoolean("profile_completed", completed).apply()
+    }
+
+    fun isProfileCompleted(): Boolean {
+        return prefs.getBoolean("profile_completed", false)
+    }
+
     fun clearSession() {
         prefs.edit().clear().apply()
     }

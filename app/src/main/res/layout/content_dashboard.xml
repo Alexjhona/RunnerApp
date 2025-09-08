@@ -176,20 +176,91 @@
                             android:layout_marginTop="2dp"/>
                     </LinearLayout>
                 </FrameLayout>
+
+                <!-- Added calories metric circle -->
+                <!-- CALORIES -->
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="1"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/metric_circle_bg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CALORÍAS"
+                            android:textSize="11sp"
+                            android:textColor="@color/gray_medium"/>
+
+                        <TextView
+                            android:id="@+id/tvCaloriesBurned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="125"
+                            android:text="0"
+                            android:textColor="@color/gray_dark"
+                            android:textStyle="bold"
+                            android:textSize="22sp"
+                            android:layout_marginTop="2dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="cal"
+                            android:textColor="@color/gray_medium"
+                            android:textSize="11sp"/>
+
+                        <TextView
+                            android:id="@+id/tvCaloriesPerMinute"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="8.5/min"
+                            android:text="0/min"
+                            android:textColor="@color/gray"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ====== PASOS (debajo de la tira de métricas) ====== -->
-        <TextView
-            android:id="@+id/tvSteps"
+        <!-- Enhanced steps and profile display -->
+        <!-- ====== PASOS Y PERFIL (debajo de la tira de métricas) ====== -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="PASOS: 0"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
+            android:orientation="horizontal"
             android:gravity="center"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"/>
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvSteps"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="PASOS: 0"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/tvUserProfile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Usuario - 70kg"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:gravity="center"/>
+        </LinearLayout>
 
         <!-- ====== LÍNEA SUPERIOR ====== -->
         <View
@@ -425,6 +496,17 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_marginTop="8dp"/>
+
+            <!-- Added round counter display for intervals -->
+            <TextView
+                android:id="@+id/tvRoundCounter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
 
     </LinearLayout>

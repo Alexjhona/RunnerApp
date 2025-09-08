@@ -65,7 +65,7 @@ class RegisterActivity : AppCompatActivity() {
 
                 sessionManager.saveUserSession(email)
                 Toast.makeText(this@RegisterActivity, "Registro exitoso", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
+                startActivity(Intent(this@RegisterActivity, ProfileQuestionnaireActivity::class.java))
                 finish()
             }
         }

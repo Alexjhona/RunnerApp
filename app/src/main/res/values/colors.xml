@@ -17,6 +17,10 @@
 
     <!-- Extras útiles para layout -->
     <color name="background_dark">#121212</color>
+    <!-- Added missing background_primary color -->
+    <color name="background_primary">#101010</color>
+    <!-- Added missing border_color -->
+    <color name="border_color">#444444</color>
     <color name="accent_orange">#FFB300</color> <!-- solo una definición -->
     <color name="error_red">#FF6D6D</color>
 
@@ -28,7 +32,6 @@
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#BDBDBD</color>
     <color name="red">#F44336</color>
-
 
     <!-- Colores adicionales para dashboard -->
     <color name="orange">#FF9800</color> <!-- Naranja principal -->

@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [Carrera::class, Usuario::class, RunSession::class],
-    version = 3,                 // <- subimos versión
+    version = 5,                 // Incremented version for calories field
     exportSchema = false
 )
 @TypeConverters(Converters::class)   // <- IMPORTANTÍSIMO

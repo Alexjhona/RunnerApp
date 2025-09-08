@@ -15,6 +15,6 @@ interface UsuarioDao {
     @Query("SELECT * FROM usuarios")
     suspend fun getAllUsuarios(): List<Usuario>
 
-
-
+    @Query("UPDATE usuarios SET nombre = :nombre, edad = :edad, genero = :genero, estatura = :estatura, peso = :peso, profileCompleted = :completed WHERE email = :email")
+    suspend fun updateUserProfile(email: String, nombre: String, edad: Int, genero: String, estatura: Float, peso: Float, completed: Boolean)
 }

@@ -14,9 +14,13 @@ class LoginActivity : AppCompatActivity() {
 
         sessionManager = SessionManager(this)
 
-        // Si ya hay sesión guardada, saltar directo al main
+        // Si ya hay sesión guardada, verificar si completó el perfil
         if (sessionManager.isLoggedIn()) {
-            startActivity(Intent(this, MainActivity::class.java))
+            if (sessionManager.isProfileCompleted()) {
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                startActivity(Intent(this, ProfileQuestionnaireActivity::class.java))
+            }
             finish()
             return
         }
@@ -28,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
         btnEnter.setOnClickListener {
             // Guardamos una sesión simple (modo invitado)
             sessionManager.saveUserSession("guest")
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, ProfileQuestionnaireActivity::class.java))
             finish()
         }
     }

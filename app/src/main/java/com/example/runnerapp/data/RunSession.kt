@@ -12,5 +12,6 @@ data class RunSession(
     val steps: Int,
     val sport: String,            // RUN / BIKE / SKATE
     val distanceMeters: Double,
-    val route: List<TrackPoint>   // se guarda como JSON con Converters
+    val route: List<TrackPoint>,   // se guarda como JSON con Converters
+    val caloriesBurned: Double = 0.0  // Added calories burned field
 )
