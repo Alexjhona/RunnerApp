@@ -13,6 +13,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Build
@@ -20,9 +21,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.NumberPicker
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,6 +41,7 @@ import com.example.runnerapp.data.RunSession
 import com.example.runnerapp.data.TrackPoint
 import com.example.runnerapp.utils.CalorieCalculator
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,6 +49,8 @@ import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
 import java.util.Locale
 import kotlin.math.abs
+import kotlin.math.floor
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class DashboardFragment : Fragment(R.layout.content_dashboard) {
@@ -86,7 +92,7 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
     private val stepDebounceMs = 350L
     private var dynamicThresh = 1.2f
 
-    // ===== Cronómetro general (botón redondo) =====
+    // ===== Cronómetro general =====
     private var isRunning = false
     private var seconds = 0
     private var runStartTime = 0L
@@ -108,7 +114,6 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
     private lateinit var btnIntervalStartPause: MaterialButton
     private lateinit var btnIntervalReset: MaterialButton
 
-    // Switch y contenedor colapsable
     private lateinit var swIntervals: SwitchMaterial
     private lateinit var intervalConfigGroup: View
     private var intervalsEnabled: Boolean = false
@@ -116,23 +121,36 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
     private var warningShownThisPhase = false
     private var intRunning = false
     private val intervalHandler = Handler(Looper.getMainLooper())
-    private val intervalTick = object : Runnable {
-        override fun run() {
-            if (!intRunning) return
-            if (intervalSecLeft > 0) {
-                intervalSecLeft--
-                if (!warningShownThisPhase && intervalSecLeft == 5) {
-                    showIntervalWarning(5)
-                    warningShownThisPhase = true
-                    playWarningSound()
-                }
-            } else {
-                switchPhase()
-            }
-            updateIntervalUI()
-            intervalHandler.postDelayed(this, 1000)
-        }
+
+    // ===== Goal Tracking =====
+    private lateinit var swGoal: SwitchMaterial
+    private lateinit var goalConfigGroup: View
+    private lateinit var npGoalDuration: NumberPicker
+    private lateinit var npGoalDistance: NumberPicker
+    private lateinit var cbGoalNotify: MaterialCheckBox
+    private lateinit var cbGoalAutoFinish: MaterialCheckBox
+
+    private var goalEnabled = false
+    private var goalDurationMin = 30
+    private var goalDistanceKm = 5
+    private var goalNotify = true
+    private var goalAutoFinish = false
+    private var goalReached = false
+    private var lastDistanceKm = 0.0
+
+    // ===== Audio settings =====
+    private lateinit var audioManager: AudioManager
+    private lateinit var swAudio: SwitchMaterial
+    private lateinit var contentAudio: LinearLayout
+    private lateinit var seekMusic: SeekBar
+    private lateinit var seekNotif: SeekBar
+    private lateinit var cbAuto: CheckBox
+    private var audioEnabled = false
+
+    private val audioPrefs by lazy {
+        requireContext().getSharedPreferences("audio_prefs", Context.MODE_PRIVATE)
     }
+    private var lastAppliedBucket: Int? = null
 
     // ===== Deporte / prefs =====
     private enum class Sport { BIKE, SKATE, RUN }
@@ -152,9 +170,18 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         const val KEY_INT_WORK = "key_int_work"
         const val KEY_INT_REST = "key_int_rest"
 
+        const val KEY_GOAL_ENABLED = "key_goal_enabled"
+        const val KEY_GOAL_DURATION = "key_goal_duration"
+        const val KEY_GOAL_DISTANCE = "key_goal_distance"
+        const val KEY_GOAL_NOTIFY = "key_goal_notify"
+        const val KEY_GOAL_AUTOFINISH = "key_goal_autofinish"
+
         const val NOTIFICATION_CHANNEL_ID = "interval_notifications"
         const val NOTIF_ID_PHASE = 2221
         const val NOTIF_ID_WARNING = 2222
+        const val NOTIF_ID_GOAL = 2223
+
+        private const val PREWARN_SECONDS = 5
     }
 
     private fun sportToInt(s: Sport) = when (s) {
@@ -162,7 +189,6 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         Sport.SKATE -> SPORT_SKATE
         else -> SPORT_RUN
     }
-
     private fun intToSport(i: Int) = when (i) {
         SPORT_BIKE -> Sport.BIKE
         SPORT_SKATE -> Sport.SKATE
@@ -210,8 +236,8 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
     private lateinit var tvSteps: TextView
     private lateinit var tvCurrentDistance: TextView
     private lateinit var tvDistanceRecord: TextView
-    private lateinit var tvCurrentAvgSpeed: TextView
-    private lateinit var tvAvgSpeedRecord: TextView
+    private lateinit var tvCurrentAvgSpeed: TextView   // pace
+    private lateinit var tvAvgSpeedRecord: TextView    // PB pace
     private lateinit var tvCurrentSpeed: TextView
     private lateinit var tvMaxSpeedRecord: TextView
     private lateinit var tvCaloriesBurned: TextView
@@ -220,10 +246,13 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
 
     private lateinit var btStart: LinearLayout
     private lateinit var btStartLabel: TextView
+    private lateinit var tvGoalHud: TextView
 
     private var mediaPlayer: MediaPlayer? = null
 
-    // ===== Timer 1 Hz del cronómetro general =====
+    private var avgSpeedKmh: Double = 0.0
+
+    // ===== Timer 1 Hz =====
     private val timerRunnable = object : Runnable {
         override fun run() {
             if (!isRunning) return
@@ -231,10 +260,32 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
             updateChronoText()
             updateRealTimeCalories()
             updateLiveMetrics()
+            checkGoalConditions()
+            updateGoalHud()
             handler.postDelayed(this, 1000)
         }
     }
 
+    // ===== Interval tick (1s) =====
+    private val intervalTick = object : Runnable {
+        override fun run() {
+            if (!intRunning) return
+            if (intervalSecLeft > 0) {
+                intervalSecLeft--
+                if (!warningShownThisPhase && intervalSecLeft == PREWARN_SECONDS) {
+                    showIntervalWarning()
+                    playWarningSound()
+                    warningShownThisPhase = true
+                }
+            } else {
+                switchPhase()
+            }
+            updateIntervalUI()
+            intervalHandler.postDelayed(this, 1000)
+        }
+    }
+
+    // ====== onViewCreated ======
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -268,14 +319,13 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         tvCaloriesBurned = view.findViewById(R.id.tvCaloriesBurned)
         tvCaloriesPerMinute = view.findViewById(R.id.tvCaloriesPerMinute)
         tvUserProfile = view.findViewById(R.id.tvUserProfile)
-
         btStart = view.findViewById(R.id.btStart)
         btStartLabel = view.findViewById(R.id.btStartLabel)
+        tvGoalHud = view.findViewById(R.id.tvGoalHud)
 
-        // ====== INTERVALOS ======
+        // ===== Intervalos =====
         swIntervals = view.findViewById(R.id.swIntervals)
         intervalConfigGroup = view.findViewById(R.id.intervalConfigGroup)
-
         npWorkMin = view.findViewById(R.id.npWorkMin)
         npRestMin = view.findViewById(R.id.npRestMin)
         tvIntervalTimer = view.findViewById(R.id.tvIntervalTimer)
@@ -287,21 +337,18 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         configurePicker(npWorkMin)
         configurePicker(npRestMin)
 
-        // Cargar prefs
         intervalsEnabled = prefs.getBoolean(KEY_INT_ENABLED, false)
         workMin = prefs.getInt(KEY_INT_WORK, 15).coerceIn(1, 60)
         restMin = prefs.getInt(KEY_INT_REST, 5).coerceIn(1, 60)
 
         swIntervals.isChecked = intervalsEnabled
         intervalConfigGroup.isVisible = intervalsEnabled
-
         npWorkMin.value = workMin
         npRestMin.value = restMin
 
         resetIntervals()
         updateIntervalUI()
 
-        // Listener del switch (colapsable)
         swIntervals.setOnCheckedChangeListener { _, checked ->
             intervalsEnabled = checked
             prefs.edit { putBoolean(KEY_INT_ENABLED, checked) }
@@ -310,27 +357,17 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
                 if (intRunning) pauseIntervals()
                 setPickersEnabled(false)
             } else {
+                requestNotificationPermission()
                 setPickersEnabled(true)
             }
         }
-
-        // Listeners de intervalos
         npWorkMin.setOnValueChangedListener { _, _, newVal ->
-            workMin = newVal
-            prefs.edit { putInt(KEY_INT_WORK, newVal) }
-            if (!intRunning) {
-                phase = IntervalPhase.WORK
-                intervalSecLeft = workMin * 60
-                updateIntervalUI()
-            }
+            workMin = newVal; prefs.edit { putInt(KEY_INT_WORK, newVal) }
+            if (!intRunning) { phase = IntervalPhase.WORK; intervalSecLeft = workMin * 60; updateIntervalUI() }
         }
         npRestMin.setOnValueChangedListener { _, _, newVal ->
-            restMin = newVal
-            prefs.edit { putInt(KEY_INT_REST, newVal) }
-            if (!intRunning && phase == IntervalPhase.REST) {
-                intervalSecLeft = restMin * 60
-                updateIntervalUI()
-            }
+            restMin = newVal; prefs.edit { putInt(KEY_INT_REST, newVal) }
+            if (!intRunning && phase == IntervalPhase.REST) { intervalSecLeft = restMin * 60; updateIntervalUI() }
         }
         btnIntervalStartPause.setOnClickListener {
             if (!swIntervals.isChecked) swIntervals.isChecked = true
@@ -338,13 +375,118 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         }
         btnIntervalReset.setOnClickListener { resetIntervals() }
 
+        // ===== Goal Tracking =====
+        swGoal = view.findViewById(R.id.swGoal)
+        goalConfigGroup = view.findViewById(R.id.goalConfigGroup)
+        npGoalDuration = view.findViewById(R.id.npGoalDuration)
+        npGoalDistance = view.findViewById(R.id.npGoalDistance)
+        cbGoalNotify = view.findViewById(R.id.cbGoalNotify)
+        cbGoalAutoFinish = view.findViewById(R.id.cbGoalAutoFinish)
+
+        goalEnabled = prefs.getBoolean(KEY_GOAL_ENABLED, false)
+        goalDurationMin = prefs.getInt(KEY_GOAL_DURATION, 30)
+        goalDistanceKm = prefs.getInt(KEY_GOAL_DISTANCE, 5)
+        goalNotify = prefs.getBoolean(KEY_GOAL_NOTIFY, true)
+        goalAutoFinish = prefs.getBoolean(KEY_GOAL_AUTOFINISH, false)
+
+        configurePicker(npGoalDuration)
+        configureKmPicker(npGoalDistance)
+
+        swGoal.isChecked = goalEnabled
+        goalConfigGroup.isVisible = goalEnabled
+        npGoalDuration.value = goalDurationMin.coerceIn(1, 60)
+        npGoalDistance.value = goalDistanceKm.coerceIn(1, 50)
+        cbGoalNotify.isChecked = goalNotify
+        cbGoalAutoFinish.isChecked = goalAutoFinish
+
+        swGoal.setOnCheckedChangeListener { _, checked ->
+            goalEnabled = checked
+            prefs.edit { putBoolean(KEY_GOAL_ENABLED, checked) }
+            goalConfigGroup.isVisible = checked
+            if (checked) requestNotificationPermission()
+            if (!checked) goalReached = false
+            updateGoalHud()
+        }
+        npGoalDuration.setOnValueChangedListener { _, _, newVal ->
+            goalDurationMin = newVal; prefs.edit { putInt(KEY_GOAL_DURATION, newVal) }; updateGoalHud()
+        }
+        npGoalDistance.setOnValueChangedListener { _, _, newVal ->
+            goalDistanceKm = newVal; prefs.edit { putInt(KEY_GOAL_DISTANCE, newVal) }; updateGoalHud()
+        }
+        cbGoalNotify.setOnCheckedChangeListener { _, isChecked ->
+            goalNotify = isChecked; prefs.edit { putBoolean(KEY_GOAL_NOTIFY, isChecked) }
+        }
+        cbGoalAutoFinish.setOnCheckedChangeListener { _, isChecked ->
+            goalAutoFinish = isChecked; prefs.edit { putBoolean(KEY_GOAL_AUTOFINISH, isChecked) }
+        }
+
+        // ===== Tarjeta: Ajustes de audio =====
+        audioManager = requireContext().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        swAudio = view.findViewById(R.id.swAudio)
+        contentAudio = view.findViewById(R.id.contentAudio)
+        seekMusic = view.findViewById(R.id.seekMusicVolume)
+        seekNotif = view.findViewById(R.id.seekNotifVolume)
+        cbAuto = view.findViewById(R.id.cbAutoVolume)
+
+        audioEnabled = audioPrefs.getBoolean("audio_enabled", false)
+        swAudio.isChecked = audioEnabled
+        contentAudio.isVisible = audioEnabled
+
+        cbAuto.isChecked = audioPrefs.getBoolean("auto_volume_enabled", false)
+        updateManualEnabledState(audioEnabled && !cbAuto.isChecked)
+
+        swAudio.setOnCheckedChangeListener { _, checked ->
+            audioEnabled = checked
+            audioPrefs.edit { putBoolean("audio_enabled", checked) }
+            contentAudio.isVisible = checked
+            updateManualEnabledState(checked && !cbAuto.isChecked)
+        }
+        cbAuto.setOnCheckedChangeListener { _, checked ->
+            audioPrefs.edit { putBoolean("auto_volume_enabled", checked) }
+            updateManualEnabledState(audioEnabled && !checked)
+        }
+
+        // Volúmenes actuales del sistema
+        val maxMusic = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        val curMusic = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+        seekMusic.max = maxMusic
+        seekMusic.progress = curMusic
+
+        val maxNotif = audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION)
+        val curNotif = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION)
+        seekNotif.max = maxNotif
+        seekNotif.progress = curNotif
+
+        seekMusic.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser && audioEnabled && !cbAuto.isChecked) {
+                    try { audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0) } catch (_: Exception) {}
+                }
+            }
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+            override fun onStopTrackingTouch(p0: SeekBar?) {}
+        })
+        seekNotif.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser && audioEnabled && !cbAuto.isChecked) {
+                    try {
+                        audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, progress, 0)
+                        val maxRing = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING)
+                        audioManager.setStreamVolume(AudioManager.STREAM_RING, progress.coerceIn(0, maxRing), 0)
+                    } catch (_: Exception) {}
+                }
+            }
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+            override fun onStopTrackingTouch(p0: SeekBar?) {}
+        })
+
         // Mapa
         view.findViewById<TextView>(R.id.btnMap).setOnClickListener {
             MapBottomSheetFragment().show(parentFragmentManager, "map")
         }
 
-        // Start/Stop general y modos
-        btStart.setOnClickListener { toggleStartStop() }
+        // Start/Stop y modos
+        btStart.setOnClickListener { requestNotificationPermission(); toggleStartStop() }
         lyBike.setOnClickListener { setSport(Sport.BIKE) }
         lySkate.setOnClickListener { setSport(Sport.SKATE) }
         lyRun.setOnClickListener { setSport(Sport.RUN) }
@@ -355,10 +497,13 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
 
         loadUserProfile()
 
-        // Métricas demo iniciales
-        updateMetrics(0.0, 0.5, 0.0, 65.9, 0.0, 106.7)
+        // Métricas iniciales
+        updateMetrics(distanceKm = 0.0, recordDistanceKm = 0.5, currentSpeed = 0.0, recordMaxSpeed = 106.7)
+        // CAMBIO: pace inicial en 0:00
+        updatePaceLabels(avgPaceMinPerKm = 0.0, recordPaceMinPerKm = 4.5)
         updateCalorieDisplay()
         updateUserProfileDisplay()
+        updateGoalHud()
     }
 
     // ===== Start / Stop general =====
@@ -392,6 +537,9 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
 
             routeVM.isTracking.postValue(true)
             ensureLocationPermissionAndStart()
+
+            goalReached = false
+            updateGoalHud()
 
             handler.post(timerRunnable)
         } else {
@@ -434,28 +582,15 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
                 withContext(Dispatchers.IO) { db.runSessionDao().insert(run) }
                 Toast.makeText(
                     requireContext(),
-                    getString(
-                        R.string.session_saved_cal_fmt,
-                        String.format(Locale.getDefault(), "%.0f", finalCalories)
-                    ),
+                    getString(R.string.session_saved_cal_fmt, String.format(Locale.getDefault(), "%.0f", finalCalories)),
                     Toast.LENGTH_LONG
                 ).show()
             }
 
-            updateMetrics(
-                distance / 1000.0, 20.0,
-                5.4, 12.0,
-                0.0, 20.0
-            )
+            updateMetrics(distance / 1000.0, 20.0, 0.0, 20.0)
+            updatePaceLabels(0.0, 4.5) // vuelve a 0:00
+            tvGoalHud.isVisible = false
         }
-    }
-
-    private fun playWarningSound() {
-        try {
-            val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            val ringtone = RingtoneManager.getRingtone(requireContext(), soundUri)
-            ringtone.play()
-        } catch (_: Exception) { }
     }
 
     // ===== Perfil / Calorías =====
@@ -502,14 +637,13 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
 
     private fun updateCalorieDisplay() {
         tvCaloriesBurned.text = String.format(Locale.getDefault(), "%.0f", currentCaloriesBurned)
-        val currentSpeed = getCurrentSpeed()
         val caloriesPerMin = CalorieCalculator.getCaloriesPerMinute(
             sport = currentSport.name,
             userWeight = userWeight,
             userAge = userAge,
             userGender = userGender,
             userHeight = userHeight,
-            currentSpeedKmh = currentSpeed
+            currentSpeedKmh = avgSpeedKmh
         )
         tvCaloriesPerMinute.text = String.format(Locale.getDefault(), "%.1f/min", caloriesPerMin)
     }
@@ -534,7 +668,7 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         tvChrono.text = String.format(Locale.getDefault(), "%02d:%02d:%02d", h, m, s)
     }
 
-    // ===== Intervalos: helpers =====
+    // ===== Intervalos helpers =====
     private fun startIntervals() {
         if (intervalSecLeft <= 0) {
             phase = IntervalPhase.WORK
@@ -582,6 +716,17 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         tvIntervalRound.text = getString(R.string.interval_round_format, currentRound)
     }
 
+    private fun showIntervalWarning() {
+        val phaseWord = getString(
+            if (phase == IntervalPhase.WORK) R.string.interval_phase_work else R.string.interval_phase_rest
+        )
+        showIntervalNotification(
+            NOTIF_ID_WARNING,
+            getString(R.string.notif_attention_title),
+            getString(R.string.notif_attention_text, PREWARN_SECONDS, phaseWord)
+        )
+    }
+
     private fun switchPhase() {
         when (phase) {
             IntervalPhase.WORK -> {
@@ -611,14 +756,60 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         vibrateForPhaseChange()
     }
 
+    // ===== Goal Tracking =====
+    private fun configureKmPicker(p: NumberPicker) {
+        p.minValue = 1
+        p.maxValue = 50
+        p.wrapSelectorWheel = false
+        p.setFormatter { v -> "$v km" }
+    }
+
+    private fun checkGoalConditions() {
+        if (!goalEnabled || !isRunning) return
+        val timeReached = seconds >= goalDurationMin * 60
+        val distanceReached = lastDistanceKm >= goalDistanceKm
+        if ((timeReached || distanceReached) && !goalReached) {
+            goalReached = true
+            if (goalNotify) {
+                showIntervalNotification(
+                    NOTIF_ID_GOAL,
+                    getString(R.string.goal_reached_title),
+                    getString(R.string.goal_reached_text, goalDurationMin, goalDistanceKm)
+                )
+            } else {
+                Toast.makeText(requireContext(), getString(R.string.goal_reached_title), Toast.LENGTH_LONG).show()
+            }
+            vibrateForPhaseChange()
+            updateGoalHud()
+            if (goalAutoFinish && isRunning) toggleStartStop()
+        }
+    }
+
+    private fun updateGoalHud() {
+        if (!goalEnabled) { tvGoalHud.isVisible = false; return }
+        if (!isRunning && !goalReached) {
+            tvGoalHud.text = getString(R.string.goal_hud_label, goalDurationMin, goalDistanceKm)
+            tvGoalHud.isVisible = true
+            return
+        }
+        if (goalReached) {
+            tvGoalHud.text = getString(R.string.goal_hud_reached)
+            tvGoalHud.isVisible = true
+            return
+        }
+        val remSec = (goalDurationMin * 60 - seconds).coerceAtLeast(0)
+        val remTime = String.format(Locale.getDefault(), "%02d:%02d", remSec / 60, remSec % 60)
+        val remKm = (goalDistanceKm - lastDistanceKm).coerceAtLeast(0.0)
+        tvGoalHud.text = getString(R.string.goal_hud_remaining, remTime, remKm)
+        tvGoalHud.isVisible = true
+    }
+
     // ===== Notificaciones / sonidos =====
     private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permission = Manifest.permission.POST_NOTIFICATIONS
-            if (ContextCompat.checkSelfPermission(requireContext(), permission)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                notificationPermLauncher.launch(permission)
+            val p = Manifest.permission.POST_NOTIFICATIONS
+            if (ContextCompat.checkSelfPermission(requireContext(), p) != PackageManager.PERMISSION_GRANTED) {
+                notificationPermLauncher.launch(p)
             }
         }
     }
@@ -626,38 +817,31 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Notificaciones de Intervalos"
-            val descriptionText = "Cambios de fase en entrenamientos por intervalos"
+            val descriptionText = "Cambios de fase y metas"
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel =
-                NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance).apply {
-                    description = descriptionText
-                    enableVibration(true)
-                    val soundUri =
-                        RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                    setSound(
-                        soundUri, AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                            .build()
-                    )
-                }
-            val nm =
-                requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+                enableVibration(true)
+                val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                setSound(
+                    soundUri,
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                        .build()
+                )
+            }
+            val nm = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nm.createNotificationChannel(channel)
         }
     }
 
     private fun showIntervalNotification(id: Int, title: String, content: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.POST_NOTIFICATIONS
-                )
-                != PackageManager.PERMISSION_GRANTED
-            ) return
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) return
         }
-        val nm =
-            requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val nm = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val n = NotificationCompat.Builder(requireContext(), NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_run)
             .setContentTitle(title)
@@ -671,15 +855,12 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         nm.notify(id, n)
     }
 
-    private fun showIntervalWarning(secondsLeft: Int) {
-        val phaseWord = getString(
-            if (phase == IntervalPhase.WORK) R.string.interval_phase_work else R.string.interval_phase_rest
-        )
-        showIntervalNotification(
-            NOTIF_ID_WARNING,
-            getString(R.string.notif_attention_title),
-            getString(R.string.notif_attention_text, secondsLeft, phaseWord)
-        )
+    private fun playWarningSound() {
+        try {
+            val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            val ringtone = RingtoneManager.getRingtone(requireContext(), soundUri)
+            ringtone.play()
+        } catch (_: Exception) { }
     }
 
     private fun playPhaseChangeSound(isWorkPhase: Boolean) {
@@ -697,15 +878,14 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .build()
                 )
-                prepare()
-                start()
-                setOnCompletionListener { release() }
+                setOnPreparedListener { start() }
+                prepareAsync()
             }
         } catch (_: Exception) {
             try {
                 val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                val ringtone = RingtoneManager.getRingtone(requireContext(), soundUri)
-                ringtone.play()
+                val ring = RingtoneManager.getRingtone(requireContext(), soundUri)
+                ring.play()
             } catch (_: Exception) { }
         }
     }
@@ -720,16 +900,11 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
 
             if (Build.VERSION.SDK_INT >= 31) {
                 val vm = requireContext().getSystemService(android.os.VibratorManager::class.java)
-                vm?.defaultVibrator?.vibrate(
-                    android.os.VibrationEffect.createWaveform(pattern, -1)
-                )
+                vm?.defaultVibrator?.vibrate(android.os.VibrationEffect.createWaveform(pattern, -1))
             } else {
-                val vibrator = if (Build.VERSION.SDK_INT >= 23) {
-                    requireContext().getSystemService(android.os.Vibrator::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    requireContext().getSystemService(Context.VIBRATOR_SERVICE) as android.os.Vibrator
-                }
+                val vibrator =
+                    if (Build.VERSION.SDK_INT >= 23) requireContext().getSystemService(android.os.Vibrator::class.java)
+                    else @Suppress("DEPRECATION") requireContext().getSystemService(Context.VIBRATOR_SERVICE) as android.os.Vibrator
 
                 if (Build.VERSION.SDK_INT >= 26) {
                     vibrator?.vibrate(android.os.VibrationEffect.createWaveform(pattern, -1))
@@ -745,11 +920,8 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
     private fun ensureActivityRecPermissionAndStartSteps() {
         if (Build.VERSION.SDK_INT >= 29) {
             val p = Manifest.permission.ACTIVITY_RECOGNITION
-            val granted =
-                ContextCompat.checkSelfPermission(requireContext(), p) == PackageManager.PERMISSION_GRANTED
-            if (!granted) {
-                activityRecPermLauncher.launch(p); return
-            }
+            val granted = ContextCompat.checkSelfPermission(requireContext(), p) == PackageManager.PERMISSION_GRANTED
+            if (!granted) { activityRecPermLauncher.launch(p); return }
         }
         startStepCounting()
     }
@@ -769,9 +941,7 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
                     }
                     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
                 }
-                sensorManager.registerListener(
-                    counterListener, stepCounter, SensorManager.SENSOR_DELAY_UI
-                )
+                sensorManager.registerListener(counterListener, stepCounter, SensorManager.SENSOR_DELAY_UI)
             }
             stepDetector != null -> {
                 stepMode = StepMode.DETECTOR
@@ -783,9 +953,7 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
                     }
                     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
                 }
-                sensorManager.registerListener(
-                    detectorListener, stepDetector, SensorManager.SENSOR_DELAY_UI
-                )
+                sensorManager.registerListener(detectorListener, stepDetector, SensorManager.SENSOR_DELAY_UI)
             }
             accel != null -> {
                 stepMode = StepMode.ACCEL_FALLBACK
@@ -809,9 +977,7 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
                     }
                     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
                 }
-                sensorManager.registerListener(
-                    accelListener, accel, SensorManager.SENSOR_DELAY_GAME
-                )
+                sensorManager.registerListener(accelListener, accel, SensorManager.SENSOR_DELAY_GAME)
             }
             else -> {
                 stepMode = StepMode.NONE
@@ -824,31 +990,91 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         counterListener?.let { sensorManager.unregisterListener(it) }
         detectorListener?.let { sensorManager.unregisterListener(it) }
         accelListener?.let { sensorManager.unregisterListener(it) }
-        counterListener = null
-        detectorListener = null
-        accelListener = null
+        counterListener = null; detectorListener = null; accelListener = null
     }
 
-    // ===== Distancia ruta =====
+    // ===== Distancia y métricas =====
     private fun distanceMetersOf(points: List<GeoPoint>): Double {
         var d = 0.0
         for (i in 1 until points.size) d += points[i - 1].distanceToAsDouble(points[i])
         return d
     }
 
+    private fun fmt2(v: Double) = String.format(Locale.getDefault(), "%.2f", v)
+
+    private fun updateMetrics(
+        distanceKm: Double,
+        recordDistanceKm: Double,
+        currentSpeed: Double,
+        recordMaxSpeed: Double
+    ) {
+        tvCurrentDistance.text = fmt2(distanceKm)
+        tvDistanceRecord.text = fmt2(recordDistanceKm)
+        tvCurrentSpeed.text = fmt2(currentSpeed)
+        tvMaxSpeedRecord.text = fmt2(recordMaxSpeed)
+    }
+
+    // CAMBIO: 0:00 cuando no hay datos
+    private fun formatPace(minPerKm: Double): String {
+        val safe = if (!minPerKm.isFinite() || minPerKm <= 0) 0.0 else minPerKm
+        val m = floor(safe).toInt()
+        val s = ((safe - m) * 60.0).roundToInt().coerceAtMost(59)
+        return String.format(Locale.getDefault(), "%d:%02d", m, s)
+    }
+
+    private fun updatePaceLabels(avgPaceMinPerKm: Double, recordPaceMinPerKm: Double) {
+        tvCurrentAvgSpeed.text = formatPace(avgPaceMinPerKm)
+        tvAvgSpeedRecord.text = formatPace(recordPaceMinPerKm)
+    }
+
+    // ===== Live metrics =====
+    private fun updateLiveMetrics() {
+        val pts = routeVM.points.value ?: return
+        if (pts.size < 2) return
+
+        // Distancia total
+        val dMeters = distanceMetersOf(pts)
+        lastDistanceKm = dMeters / 1000.0
+
+        // Velocidad promedio (estable)
+        avgSpeedKmh = if (seconds > 0) (lastDistanceKm / (seconds / 3600.0)) else 0.0
+
+        // Pace medio (CAMBIO: 0.0 cuando no hay distancia)
+        val elapsedMinutes = seconds / 60.0
+        val avgPaceMinPerKm = if (lastDistanceKm > 0) elapsedMinutes / lastDistanceKm else 0.0
+
+        updateMetrics(
+            distanceKm = lastDistanceKm,
+            recordDistanceKm = 20.0,
+            currentSpeed = avgSpeedKmh,
+            recordMaxSpeed = 20.0
+        )
+        updatePaceLabels(avgPaceMinPerKm, recordPaceMinPerKm = 4.5)
+
+        // Auto-volumen usa la velocidad promedio
+        maybeApplyAutoVolume(avgSpeedKmh)
+    }
+
+    // ===== Util =====
+    private fun configurePicker(p: NumberPicker) {
+        p.minValue = 1
+        p.maxValue = 60
+        p.wrapSelectorWheel = false
+        p.setFormatter { v -> "$v min" }
+    }
+
+    private fun fmtMinSec(totalSeconds: Int): String {
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+    }
+
     // ===== Location =====
     private fun ensureLocationPermissionAndStart() {
-        val fine =
-            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val coarse =
-            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val fine = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val coarse = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         if (fine || coarse) startLocationUpdates()
-        else locPermLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
+        else locPermLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
     }
 
     private fun startLocationUpdates() {
@@ -867,7 +1093,6 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
             if (prev != null) {
                 val dist = loc.distanceTo(prev)
                 if (dist < minDist) return@LocationListener
-
                 val dt = (loc.time - prev.time) / 1000.0
                 if (dt > 0) {
                     val speed = dist / dt
@@ -881,18 +1106,10 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
 
         try {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 1500L, 0f, locationListener!!
-                )
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1500L, 0f, locationListener!!)
             } else {
-                locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, 3000L, 0f, locationListener!!
-                )
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.gps_disabled_using_network),
-                    Toast.LENGTH_SHORT
-                ).show()
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000L, 0f, locationListener!!)
+                Toast.makeText(requireContext(), getString(R.string.gps_disabled_using_network), Toast.LENGTH_SHORT).show()
             }
         } catch (_: SecurityException) { }
     }
@@ -910,15 +1127,9 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
     }
 
     private fun applySportUI() {
-        lyBike.setBackgroundResource(
-            if (currentSport == Sport.BIKE) R.drawable.mode_bg_selected else R.drawable.mode_bg_unselected
-        )
-        lySkate.setBackgroundResource(
-            if (currentSport == Sport.SKATE) R.drawable.mode_bg_selected else R.drawable.mode_bg_unselected
-        )
-        lyRun.setBackgroundResource(
-            if (currentSport == Sport.RUN) R.drawable.mode_bg_selected else R.drawable.mode_bg_unselected
-        )
+        lyBike.setBackgroundResource(if (currentSport == Sport.BIKE) R.drawable.mode_bg_selected else R.drawable.mode_bg_unselected)
+        lySkate.setBackgroundResource(if (currentSport == Sport.SKATE) R.drawable.mode_bg_selected else R.drawable.mode_bg_unselected)
+        lyRun.setBackgroundResource(if (currentSport == Sport.RUN) R.drawable.mode_bg_selected else R.drawable.mode_bg_unselected)
 
         val white = ContextCompat.getColor(requireContext(), R.color.white)
         val gray = ContextCompat.getColor(requireContext(), R.color.text_secondary)
@@ -927,56 +1138,33 @@ class DashboardFragment : Fragment(R.layout.content_dashboard) {
         ivRun.setColorFilter(if (currentSport == Sport.RUN) white else gray)
     }
 
-    // ===== Métricas =====
-    private fun fmt2(v: Double) = String.format(Locale.getDefault(), "%.2f", v)
-
-    private fun updateMetrics(
-        distanceKm: Double,
-        recordDistanceKm: Double,
-        avgSpeed: Double,
-        recordAvgSpeed: Double,
-        currentSpeed: Double,
-        recordMaxSpeed: Double
-    ) {
-        tvCurrentDistance.text = fmt2(distanceKm)
-        tvDistanceRecord.text = fmt2(recordDistanceKm)
-        tvCurrentAvgSpeed.text = fmt2(avgSpeed)
-        tvAvgSpeedRecord.text = fmt2(recordAvgSpeed)
-        tvCurrentSpeed.text = fmt2(currentSpeed)
-        tvMaxSpeedRecord.text = fmt2(recordMaxSpeed)
+    // ===== Audio helpers =====
+    private fun updateManualEnabledState(enabled: Boolean) {
+        seekMusic.isEnabled = enabled
+        seekNotif.isEnabled = enabled
     }
 
-    private fun updateLiveMetrics() {
-        val pts = routeVM.points.value ?: return
-        if (pts.size >= 2) {
-            val dMeters = distanceMetersOf(pts)
-            val km = dMeters / 1000.0
-            val last = pts.last()
-            val prev = pts[pts.lastIndex - 1]
-            val v = prev.distanceToAsDouble(last)
-            updateMetrics(
-                distanceKm = km,
-                recordDistanceKm = 20.0,
-                avgSpeed = 0.0,
-                recordAvgSpeed = 12.0,
-                currentSpeed = v * 3.6,
-                recordMaxSpeed = 20.0
-            )
+    private fun maybeApplyAutoVolume(speedKmh: Double) {
+        if (!audioEnabled || !cbAuto.isChecked) return
+        val bucket = when {
+            speedKmh < 3.0 -> 0   // parado/camino lento
+            speedKmh < 8.0 -> 1   // trote/ciclo suave
+            else -> 2             // rápido
         }
-    }
+        if (bucket == lastAppliedBucket) return
+        lastAppliedBucket = bucket
 
-    // ===== Util =====
-    private fun configurePicker(p: NumberPicker) {
-        p.minValue = 1
-        p.maxValue = 60
-        p.wrapSelectorWheel = false
-        p.setFormatter { v -> "$v min" }
-    }
+        val max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        val target = when (bucket) {
+            0 -> (max * 0.25).toInt()
+            1 -> (max * 0.55).toInt()
+            else -> (max * 0.80).toInt()
+        }.coerceIn(0, max)
 
-    private fun fmtMinSec(totalSeconds: Int): String {
-        val minutes = totalSeconds / 60
-        val seconds = totalSeconds % 60
-        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+        try {
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, target, 0)
+            seekMusic.progress = target
+        } catch (_: Exception) {}
     }
 
     // ===== Ciclo de vida =====

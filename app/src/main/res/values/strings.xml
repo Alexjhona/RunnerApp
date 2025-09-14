@@ -110,6 +110,11 @@
     <string name="interval_phase_rest">Descanso</string>
     <string name="interval_round_format">Ronda %1$d</string>
 
+    <string name="goal_hud_label">Goal: %1$d min · %2$d km</string>
+    <string name="goal_hud_remaining">Remaining: %1$s · %2$.1f km</string>
+    <string name="goal_hud_reached">Goal reached ✔</string>
+
+
 
 
 
@@ -123,6 +128,32 @@
     <!-- Texto del botón Reset en la tarjeta de Intervalos -->
     <string name="reset">RESET</string>
     <!-- Si lo prefieres en español: <string name="reset">REINICIAR</string> -->
+    <!-- Goal Tracking -->
+    <string name="goal_tracking_title">GOAL TRACKING</string>
+    <string name="goal_duration_min">Duration (min)</string>
+    <string name="goal_distance_km">Distance (km)</string>
+    <string name="goal_notify">Notify when goal is reached</string>
+    <string name="goal_auto_finish">Auto finish run</string>
+    <string name="goal_reached_title">Goal reached</string>
+    <string name="goal_reached_text">Target met: %1$d min / %2$d km</string>
+
+    <string name="audio_settings_title">Ajustes de audio</string>
+    <string name="expand_collapse">Expandir/Colapsar</string>
+    <string name="music_volume_label">Volumen de música</string>
+    <string name="notif_volume_label">Volumen de notificaciones</string>
+    <string name="auto_volume_label">Volumen automático</string>
+    <string name="auto_volume_hint">Ajusta el volumen según tu actividad (ej. velocidad). Puedes desactivarlo cuando quieras.</string>
+
+
+    <string name="unit_min_km">min/km</string>
+    <string name="dash">—</string>
+
+
+
+
+
+
+
 
 
 
