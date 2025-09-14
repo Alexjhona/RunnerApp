@@ -1,45 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Colores base del tema (usados en themes.xml) -->
-    <color name="purple_500">#6200EE</color>
-    <color name="purple_700">#3700B3</color>
-    <color name="teal_200">#03DAC5</color>
-    <color name="teal_700">#018786</color>
+    <!-- Premium Fitness Primary Colors -->
+    <color name="primary_fitness">#374151</color>
+    <color name="primary_fitness_light">#4b5563</color>
+    <color name="primary_fitness_dark">#1f2937</color>
+    <color name="secondary_fitness">#6366f1</color>
+    <color name="secondary_fitness_light">#818cf8</color>
+    <color name="secondary_fitness_dark">#4f46e5</color>
+    <color name="on_primary">#ffffff</color>
 
-    <!-- Botones Login -->
-    <color name="green_500">#2E7D32</color>
+    <!-- Premium Fitness Background Colors -->
+    <color name="background_primary">#ffffff</color>
+    <color name="background_secondary">#f8fafc</color>
+    <color name="background_dark">#1f2937</color>
+    <color name="surface">#f8fafc</color>
+    <color name="surface_variant">#f1f5f9</color>
+    <color name="card_fitness">#f8fafc</color>
+
+    <!-- Premium Fitness Text Colors -->
+    <color name="text_primary">#1f2937</color>
+    <color name="text_secondary">#374151</color>
+    <color name="text_on_primary">#ffffff</color>
+    <color name="text_on_dark">#f9fafb</color>
+    <color name="text_muted">#6b7280</color>
+
+    <!-- Premium Fitness Performance Colors -->
+    <color name="performance_excellent">#10b981</color>
+    <color name="performance_good">#3b82f6</color>
+    <color name="performance_average">#f59e0b</color>
+    <color name="performance_poor">#dc2626</color>
+    <color name="performance_metric">#6366f1</color>
+
+    <!-- Premium Fitness Accent Colors -->
+    <color name="accent_success">#10b981</color>
+    <color name="accent_warning">#f59e0b</color>
+    <color name="accent_error">#dc2626</color>
+    <color name="accent_info">#6366f1</color>
+    <color name="accent_motivation">#8b5cf6</color>
+
+    <!-- Premium Fitness Border and Stroke Colors -->
+    <color name="border_color">#d1d5db</color>
+    <color name="stroke_light">#f1f5f9</color>
+    <color name="stroke_medium">#d1d5db</color>
+    <color name="stroke_dark">#9ca3af</color>
+
+    <!-- Updated legacy colors -->
+    <color name="primary_orange">#374151</color>
+    <color name="primary_orange_light">#6366f1</color>
+    <color name="primary_orange_dark">#1f2937</color>
+    <color name="purple_500">#6366f1</color>
+    <color name="purple_700">#4f46e5</color>
+    <color name="teal_200">#10b981</color>
+    <color name="teal_700">#059669</color>
+    <color name="green_500">#10b981</color>
     <color name="on_green">#FFFFFF</color>
-
-    <!-- Colores básicos -->
     <color name="white">#FFFFFF</color>
-    <color name="on_white">#121212</color>
-    <color name="stroke_200">#DDDDDD</color>
+    <color name="on_white">#1f2937</color>
+    <color name="stroke_200">#d1d5db</color>
+    <color name="accent_orange">#6366f1</color>
+    <color name="error_red">#dc2626</color>
+    <color name="app_bg">#ffffff</color>
+    <color name="card_bg">#f8fafc</color>
+    <color name="card_stroke">#d1d5db</color>
+    <color name="accent_green">#10b981</color>
+    <color name="red">#dc2626</color>
+    <color name="orange">#6366f1</color>
+    <color name="chrono_running">#6366f1</color>
+    <color name="gray">#6b7280</color>
+    <color name="gray_dark">#374151</color>
+    <color name="gray_medium">#9ca3af</color>
+    <color name="salmon_dark">#4f46e5</color>
+    <color name="transparent">#00000000</color>
 
-    <!-- Extras útiles para layout -->
-    <color name="background_dark">#121212</color>
-    <!-- Added missing background_primary color -->
-    <color name="background_primary">#101010</color>
-    <!-- Added missing border_color -->
-    <color name="border_color">#444444</color>
-    <color name="accent_orange">#FFB300</color> <!-- solo una definición -->
-    <color name="error_red">#FF6D6D</color>
+    <!-- Azul de marca -->
+    <color name="brand_blue">#2962FF</color>
+    <color name="brand_blue_40">#662962FF</color> <!-- 40% alpha -->
 
-    <!-- Pantalla principal -->
-    <color name="app_bg">#101010</color>
-    <color name="card_bg">#222222</color>
-    <color name="card_stroke">#444444</color>
-    <color name="accent_green">#4CAF50</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#BDBDBD</color>
-    <color name="red">#F44336</color>
+    <!-- Material Design colores que usa tu Theme.RunnerApp -->
+    <color name="md_primary">@color/brand_blue</color>   <!-- ahora AZUL global -->
+    <color name="md_onPrimary">#FFFFFF</color>
+    <color name="md_background">#FFFFFF</color>
+    <color name="md_onBackground">#111111</color>
+    <color name="md_surface">#FFFFFF</color>
+    <color name="md_onSurface">#111111</color>
 
-    <!-- Colores adicionales para dashboard -->
-    <color name="orange">#FF9800</color> <!-- Naranja principal -->
-    <color name="chrono_running">#FF5722</color> <!-- Rojo-anaranjado para cronómetro corriendo -->
-    <color name="gray">#9E9E9E</color> <!-- Gris estándar -->
-    <color name="gray_dark">#424242</color> <!-- Fondo oscuro -->
-    <color name="gray_medium">#757575</color> <!-- Texto secundario -->
-    <color name="salmon_dark">#E57373</color> <!-- Para el círculo de velocidad -->
-    <color name="transparent">#00000000</color> <!-- Transparente -->
-
+    <!-- Splash -->
+    <color name="splash_bg">#FFFFFF</color>
 </resources>

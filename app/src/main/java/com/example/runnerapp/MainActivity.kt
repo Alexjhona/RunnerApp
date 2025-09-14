@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
 
+        // Usa tus strings existentes: nav_open / nav_close
         toggle = ActionBarDrawerToggle(
             this, drawer, toolbar,
             R.string.nav_open, R.string.nav_close
@@ -37,30 +38,27 @@ class MainActivity : AppCompatActivity() {
         drawer.addDrawerListener(toggle)
         toggle.syncState()
 
-        // Cargar Dashboard por defecto
         if (savedInstanceState == null) showDashboard()
 
         navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_item_achievements -> {
                     startActivity(Intent(this, AchievementsActivity::class.java))
-                    drawer.closeDrawers()
-                    true
+                    drawer.closeDrawers(); true
                 }
                 R.id.nav_item_record -> {
                     startActivity(Intent(this, HistorialActivity::class.java))
-                    drawer.closeDrawers()
-                    true
+                    drawer.closeDrawers(); true
                 }
                 R.id.nav_item_music -> {
                     startActivity(Intent(this, MusicActivity::class.java))
-                    drawer.closeDrawers()
-                    true
+                    drawer.closeDrawers(); true
                 }
                 R.id.nav_item_signout -> {
                     sessionManager.clearSession()
-                    val i = Intent(this, LoginActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    val i = Intent(this, ProfileQuestionnaireActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
                     startActivity(i)
                     true
                 }
@@ -69,11 +67,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         onBackPressedDispatcher.addCallback(this) {
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START)
-            } else if (supportFragmentManager.backStackEntryCount > 0) {
-                supportFragmentManager.popBackStack()
-            } else finish()
+            when {
+                drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
+                supportFragmentManager.backStackEntryCount > 0 -> supportFragmentManager.popBackStack()
+                else -> finish()
+            }
         }
     }
 

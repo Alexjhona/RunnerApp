@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base para TODA la app (incluye Login) -->
-    <style name="Theme.RunnerApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorSecondary">@color/teal_200</item>
+
+    <!-- Tema base para TODA la app -->
+    <style name="Theme.RunnerApp" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Paleta base -->
+        <item name="colorPrimary">@color/md_primary</item>
+        <item name="colorOnPrimary">@color/md_onPrimary</item>
+
+        <item name="android:windowBackground">@color/md_background</item>
+
+        <item name="colorSurface">@color/md_surface</item>
+        <item name="colorOnSurface">@color/md_onSurface</item>
     </style>
 
-    <!-- SOLO para MainActivity -->
-    <style name="Theme.RunnerApp.Main" parent="Theme.RunnerApp">
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
-        <item name="android:navigationBarColor">?attr/colorPrimary</item>
+    <!-- Estilos de widgets (botón / switch) en azul -->
+    <style name="Widget.RunnerApp.Button.PrimaryBlue" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/brand_blue</item>
+        <item name="android:textColor">@color/text_on_dark</item>
+        <item name="rippleColor">@color/brand_blue_40</item>
     </style>
+
+    <style name="Widget.RunnerApp.Switch.Blue" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="thumbTint">@color/switch_thumb_tint</item>
+        <item name="trackTint">@color/switch_track_tint</item>
+    </style>
+
+    <!-- Barras y controles en AZUL (sin attrs de API 23/27 aquí) -->
+    <style name="Theme.RunnerApp.Main" parent="Theme.RunnerApp">
+        <item name="colorPrimary">@color/brand_blue</item>
+        <item name="android:statusBarColor">@color/brand_blue</item>
+        <item name="android:navigationBarColor">@color/brand_blue</item>
+
+        <!-- Botones y switches azules por defecto -->
+        <item name="materialButtonStyle">@style/Widget.RunnerApp.Button.PrimaryBlue</item>
+        <item name="buttonStyle">@style/Widget.RunnerApp.Button.PrimaryBlue</item>
+        <item name="materialSwitchStyle">@style/Widget.RunnerApp.Switch.Blue</item>
+        <item name="switchStyle">@style/Widget.RunnerApp.Switch.Blue</item>
+    </style>
+
+    <!-- Splash blanco (sin icono recortado) -->
+    <style name="Theme.RunnerApp.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_empty</item>
+        <item name="windowSplashScreenBackground">@color/splash_bg</item>
+        <item name="windowSplashScreenAnimationDuration">700</item>
+        <item name="postSplashScreenTheme">@style/Theme.RunnerApp</item>
+    </style>
+
 </resources>

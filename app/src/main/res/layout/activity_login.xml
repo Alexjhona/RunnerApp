@@ -16,15 +16,6 @@
         android:contentDescription="@string/banner_description"
         android:layout_marginBottom="32dp" />
 
-    <!-- Botón único para ingresar -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_enter"
-        style="@style/Widget.RunnerApp.Button.GreenFilled"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Ingresar"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+
 
 </LinearLayout>

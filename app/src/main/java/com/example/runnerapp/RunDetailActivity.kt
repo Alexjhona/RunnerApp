@@ -25,7 +25,8 @@ class RunDetailActivity : AppCompatActivity() {
         // Requerido por osmdroid
         Configuration.getInstance().userAgentValue = packageName
 
-        map = findViewById(R.id.osmMapDetail)
+        // Id actualizado para coincidir con tu XML (mapView)
+        map = findViewById(R.id.mapView)
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setMultiTouchControls(true)
         map.controller.setZoom(16.0)
@@ -52,18 +53,24 @@ class RunDetailActivity : AppCompatActivity() {
                 return@launch
             }
 
-            // Dibuja la ruta
             val poly = Polyline().apply {
                 setPoints(pts)
                 outlinePaint.strokeWidth = 10f
-                // color por defecto de osmdroid; si quieres usa ContextCompat.getColor(...)
             }
+            map.overlays.clear()
             map.overlays.add(poly)
             map.controller.setCenter(pts.last())
             map.invalidate()
         }
     }
 
-    override fun onResume() { super.onResume(); map.onResume() }
-    override fun onPause() { map.onPause(); super.onPause() }
+    override fun onResume() {
+        super.onResume()
+        map.onResume()
+    }
+
+    override fun onPause() {
+        map.onPause()
+        super.onPause()
+    }
 }

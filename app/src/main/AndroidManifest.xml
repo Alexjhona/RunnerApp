@@ -3,25 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permisos base -->
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- Foreground service (compat) -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <!-- Android 14+ (A14) -->
+    <!-- Foreground service -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Android 14+ -->
     <uses-permission
         android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
         tools:targetApi="34" />
 
-    <!-- Android 13+ (A13) Notificaciones -->
+    <!-- Android 13+ Notificaciones -->
     <uses-permission
         android:name="android.permission.POST_NOTIFICATIONS"
         tools:targetApi="33" />
 
-    <!-- Removed duplicate ACTIVITY_RECOGNITION permission -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -35,21 +34,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RunnerApp">
 
-        <!-- Added ProfileQuestionnaireActivity to manifest -->
+        <!-- SPLASH: pantalla de arranque -->
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.RunnerApp.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Pantallas de la app (sin MAIN/LAUNCHER) -->
         <activity
             android:name=".ProfileQuestionnaireActivity"
             android:exported="false"
-            android:parentActivityName=".LoginActivity" />
-
-        <!-- Nueva: Logros (Compose) -->
-        <activity
-            android:name=".AchievementsActivity"
-            android:exported="false" />
+            android:theme="@style/Theme.RunnerApp.Main"
+            android:parentActivityName=".MainActivity" />
 
         <activity
-            android:name=".RunDetailActivity"
+            android:name=".MainActivity"
             android:exported="false"
-            android:parentActivityName=".HistorialActivity" />
+            android:theme="@style/Theme.RunnerApp.Main" />
 
         <activity
             android:name=".HistorialActivity"
@@ -57,21 +63,23 @@
             android:parentActivityName=".MainActivity" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".RunDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RunnerApp.Main"
+            android:parentActivityName=".HistorialActivity" />
+
+        <activity
+            android:name=".AchievementsActivity"
             android:exported="false" />
 
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
 
+        <!-- Ya no es LAUNCHER -->
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+            android:exported="true" />
 
         <!-- Servicio de música en primer plano -->
         <service

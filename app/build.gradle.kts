@@ -76,23 +76,21 @@ dependencies {
     implementation("androidx.media:media:1.6.0")
     implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
 
-    // Extra UI que usabas
+    // Extra UI
     implementation("me.tankery.lib:circularSeekBar:1.3.2")
 
-    // Compose BOM
+    // Compose
     implementation(platform("androidx.compose:compose-bom:2024.09.00"))
     implementation("androidx.activity:activity-compose:1.9.2")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
-    implementation("androidx.compose.material:material-icons-extended") // <- NECESARIO
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
-    // Imágenes en Compose
-    implementation("io.coil-kt:coil-compose:2.6.0")
-    implementation(platform("androidx.compose:compose-bom:2024.09.00"))
-    implementation("androidx.compose.material:material-icons-extended") // 👈 necesario para Icons.Default.*
-    implementation("io.coil-kt:coil-compose:2.6.0")
+    // Splash moderno
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Tests
     testImplementation(libs.test.junit)
