@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_historial" android:title="Historial" />
+    <item android:id="@+id/menu_perfil"    android:title="Perfil" />
+    <item android:id="@+id/menu_ajustes"   android:title="Ajustes" />
+    <item android:id="@+id/menu_reset"     android:title="Restablecer ajustes" />
+    <item android:id="@+id/menu_logout"    android:title="Cerrar sesión" />
+    <item android:id="@+id/menu_ayuda"     android:title="Ayuda" />
+</menu>

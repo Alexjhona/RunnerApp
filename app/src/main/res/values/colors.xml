@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Updated to professional fitness color scheme with blue primary and modern accents -->
+    <!-- Premium Fitness Primary Colors - Blue Theme -->
+    <color name="primary_fitness">#1e40af</color>
+    <color name="primary_fitness_light">#3b82f6</color>
+    <color name="primary_fitness_dark">#1e3a8a</color>
+    <color name="secondary_fitness">#0ea5e9</color>
+    <color name="secondary_fitness_light">#38bdf8</color>
+    <color name="secondary_fitness_dark">#0284c7</color>
+    <color name="on_primary">#ffffff</color>
+
+    <!-- Added missing color definitions for ExerciseProgressAdapter -->
+    <color name="primary_blue">#1e40af</color>
+    <color name="primary_green">#10b981</color>
+
+    <!-- Premium Fitness Background Colors -->
+    <color name="background_primary">#ffffff</color>
+    <color name="background_secondary">#eff6ff</color>
+    <color name="background_dark">#374151</color>
+    <color name="surface">#eff6ff</color>
+    <color name="surface_variant">#dbeafe</color>
+    <color name="card_fitness">#eff6ff</color>
+
+    <!-- Premium Fitness Text Colors -->
+    <color name="text_primary">#374151</color>
+    <color name="text_secondary">#374151</color>
+    <color name="text_on_primary">#ffffff</color>
+    <color name="text_on_dark">#f9fafb</color>
+    <color name="text_muted">#6b7280</color>
+
+    <!-- Premium Fitness Performance Colors -->
+    <color name="performance_excellent">#1e40af</color>
+    <color name="performance_good">#3b82f6</color>
+    <color name="performance_average">#0ea5e9</color>
+    <color name="performance_poor">#dc2626</color>
+    <color name="performance_metric">#1e40af</color>
+
+    <!-- Premium Fitness Accent Colors -->
+    <color name="accent_success">#1e40af</color>
+    <color name="accent_warning">#f59e0b</color>
+    <color name="accent_error">#dc2626</color>
+    <color name="accent_info">#0ea5e9</color>
+    <color name="accent_motivation">#3b82f6</color>
+
+    <!-- Premium Fitness Border and Stroke Colors -->
+    <color name="border_color">#e5e7eb</color>
+    <color name="stroke_light">#dbeafe</color>
+    <color name="stroke_medium">#e5e7eb</color>
+    <color name="stroke_dark">#9ca3af</color>
+
+    <!-- Updated legacy colors to match new blue scheme -->
+    <color name="primary">#1e40af</color>
+    <color name="primary_dark">#1e3a8a</color>
+    <color name="primary_orange">#1e40af</color>
+    <color name="primary_orange_light">#0ea5e9</color>
+    <color name="primary_orange_dark">#1e3a8a</color>
+    <color name="purple_500">#1e40af</color>
+    <color name="purple_700">#1e3a8a</color>
+    <color name="teal_200">#3b82f6</color>
+    <color name="teal_700">#1e40af</color>
+    <color name="green_500">#1e40af</color>
+    <color name="on_green">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="on_white">#374151</color>
+    <color name="stroke_200">#e5e7eb</color>
+    <color name="accent_orange">#0ea5e9</color>
+    <color name="error_red">#dc2626</color>
+    <color name="app_bg">#ffffff</color>
+    <color name="card_bg">#eff6ff</color>
+    <color name="card_stroke">#e5e7eb</color>
+    <color name="accent_green">#1e40af</color>
+    <color name="red">#dc2626</color>
+    <color name="orange">#0ea5e9</color>
+    <color name="chrono_running">#1e40af</color>
+    <color name="gray">#6b7280</color>
+    <color name="gray_dark">#374151</color>
+    <color name="gray_medium">#9ca3af</color>
+    <color name="salmon_dark">#1e3a8a</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- Updated brand blue to professional blue -->
+    <color name="brand_blue">#1e40af</color>
+    <color name="brand_blue_40">#661e40af</color> <!-- 40% alpha -->
+
+    <!-- Material Design colores que usa tu Theme.RunnerApp -->
+    <color name="md_primary">@color/brand_blue</color>   <!-- ahora AZUL global -->
+    <color name="md_onPrimary">#FFFFFF</color>
+    <color name="md_background">#FFFFFF</color>
+    <color name="md_onBackground">#374151</color>
+    <color name="md_surface">#eff6ff</color>
+    <color name="md_onSurface">#374151</color>
+
+    <!-- Splash -->
+    <color name="splash_bg">#FFFFFF</color>
+    <color name="background_light">#FFFFFF</color>
+    <color name="primary_color">#1e40af</color>
+    <color name="accent_color">#0ea5e9</color>
+    <color name="secondary_color">#0ea5e9</color>
+</resources>

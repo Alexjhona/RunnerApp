@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Updated theme to use professional fitness green color scheme -->
+    <!-- Tema base para TODA la app -->
+    <style name="Theme.RunnerApp" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Paleta base -->
+        <item name="colorPrimary">@color/md_primary</item>
+        <item name="colorOnPrimary">@color/md_onPrimary</item>
+        <item name="colorSecondary">@color/secondary_fitness</item>
+        <item name="colorOnSecondary">@color/text_on_primary</item>
+        <item name="colorSurface">@color/md_surface</item>
+        <item name="colorOnSurface">@color/md_onSurface</item>
+
+        <item name="android:windowBackground">@color/md_background</item>
+        
+        <!-- Enhanced typography for professional appearance -->
+        <item name="android:textViewStyle">@style/Widget.RunnerApp.TextView</item>
+        <item name="textAppearanceHeadline1">@style/TextAppearance.RunnerApp.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.RunnerApp.Headline2</item>
+    </style>
+
+    <!-- Professional typography styles -->
+    <!-- Fixed invalid Material3 TextView style reference -->
+    <style name="Widget.RunnerApp.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="TextAppearance.RunnerApp.Headline1" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.RunnerApp.Headline2" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <!-- Updated button styles to use professional green -->
+    <style name="Widget.RunnerApp.Button.PrimaryGreen" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/primary_fitness</item>
+        <item name="android:textColor">@color/text_on_primary</item>
+        <item name="rippleColor">@color/primary_fitness_light</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="Widget.RunnerApp.Switch.Green" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="thumbTint">@color/switch_thumb_tint</item>
+        <item name="trackTint">@color/switch_track_tint</item>
+    </style>
+
+    <!-- Updated main theme to use professional green -->
+    <style name="Theme.RunnerApp.Main" parent="Theme.RunnerApp">
+        <item name="colorPrimary">@color/primary_fitness</item>
+        <item name="android:statusBarColor">@color/primary_fitness</item>
+        <item name="android:navigationBarColor">@color/primary_fitness</item>
+
+        <!-- Botones y switches verdes por defecto -->
+        <item name="materialButtonStyle">@style/Widget.RunnerApp.Button.PrimaryGreen</item>
+        <item name="buttonStyle">@style/Widget.RunnerApp.Button.PrimaryGreen</item>
+        <item name="materialSwitchStyle">@style/Widget.RunnerApp.Switch.Green</item>
+        <item name="switchStyle">@style/Widget.RunnerApp.Switch.Green</item>
+    </style>
+
+    <!-- Splash blanco (sin icono recortado) -->
+    <style name="Theme.RunnerApp.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_empty</item>
+        <item name="windowSplashScreenBackground">@color/splash_bg</item>
+        <item name="windowSplashScreenAnimationDuration">700</item>
+        <item name="postSplashScreenTheme">@style/Theme.RunnerApp</item>
+    </style>
+
+</resources>

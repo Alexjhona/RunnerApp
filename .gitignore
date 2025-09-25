@@ -1,0 +1,23 @@
+# Gradle / builds
+.gradle/
+build/
+**/build/
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# NDK / caches
+.cxx/
+captures/
+
+# Artifacts grandes (no versionar)
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# Otros
+.DS_Store
+Thumbs.db

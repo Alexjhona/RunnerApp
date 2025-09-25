@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nav_header"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:background="@color/accent_orange"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nivel 1"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/tvTotalTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tiempo total: 00:00:00"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/tvRunsGoal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Carreras: 0 / Objetivo: 25"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="2dp"/>
+</LinearLayout>

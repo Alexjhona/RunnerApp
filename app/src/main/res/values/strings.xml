@@ -1,0 +1,149 @@
+<resources>
+    <string name="app_name">RunnerApp</string>
+    <string name="banner_description">Banner</string>
+    <string name="frase_motivadora">¿Hasta qué nivel eres capaz de llegar?</string>
+
+    <!-- Login / Registro -->
+    <string name="correo">Correo electrónico</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="iniciar_sesion">Iniciar sesión</string>
+    <string name="olvidaste_contrasena">¿Olvidaste tu contraseña?</string>
+    <string name="google_login">Iniciar con Google</string>
+    <string name="facebook_login">Iniciar con Facebook</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+    <string name="apodo">Apodo (opcional)</string>
+    <string name="registrarse">Registrarse</string>
+
+    <!-- Menú lateral -->
+    <string name="nav_open">Abrir menú</string>
+    <string name="nav_close">Cerrar menú</string>
+    <string name="musica">Música</string>
+    <string name="menu_running">Inicio</string>
+    <string name="menu_record">Historial</string>
+    <string name="menu_becamepremium">Hacerse Premium</string>
+    <string name="menu_account">Cuenta</string>
+    <string name="menu_clearpreferences">Restablecer ajustes</string>
+    <string name="menu_signout">Cerrar sesión</string>
+    <string name="menu_ads">Anuncio</string>
+    <string name="menu_offercourse">Ofertas / Cursos</string>
+    <string name="menu_music">Música</string>
+
+    <string name="delete">Eliminar</string>
+
+
+    <!-- Botón principal -->
+    <string name="start">VAVAVA</string>
+    <string name="stop">TATE QUIETO</string>
+    <string name="init_stop_watch_value">00:00:00</string>
+
+    <!-- Sección Performance -->
+    <string name="perf_title">PERFORMANCE TRACKER</string>
+    <string name="perf_subtitle">Push your limits, track your progress</string>
+
+    <!-- Métricas -->
+    <string name="label_distance">DISTANCE</string>
+    <string name="label_avg_speed">AVG PACE</string>
+    <string name="label_speed">SPEED</string>
+    <string name="label_calories">CALORIES</string>
+    <string name="unit_km">km</string>
+    <string name="unit_kmh">km/h</string>
+    <string name="unit_kcal">kcal</string>
+    <string name="unit_cal_min">%1$.1f/min</string>
+
+    <!-- Icon descriptions -->
+    <string name="desc_bike_icon">Icono bicicleta</string>
+    <string name="desc_skate_icon">Icono patines</string>
+    <string name="desc_run_icon">Icono correr</string>
+
+    <!-- Música -->
+    <string name="music_title">Música</string>
+    <string name="music_add">Agregar canciones</string>
+    <string name="music_empty">Aún no has agregado canciones.</string>
+    <string name="music_now_playing">Reproduciendo:</string>
+    <string name="music_now_playing_fmt">Reproduciendo: %1$s</string>
+
+    <!-- Pasos -->
+    <string name="steps_label">PASOS: %1$d</string>
+    <string name="steps_perm_denied">PASOS: permiso denegado</string>
+    <string name="steps_sensor_unavailable">PASOS: sensor no disponible</string>
+
+    <!-- Intervalos -->
+    <string name="intervals_title">INTERVAL TRAINING</string>
+    <string name="intervals_enable">Enable High-Intensity Intervals</string>
+    <string name="intervals_work">Trabajo (min)</string>
+    <string name="intervals_rest">Descanso (min)</string>
+    <string name="intervals_off">Intervalos desactivados</string>
+    <string name="intervals_working">Trabajo: %1$s</string>
+    <string name="intervals_resting">Descanso: %1$s</string>
+    <string name="intervals_time_placeholder">--:--</string>
+    <string name="intervals_start">Iniciar</string>
+    <string name="intervals_pause">Pausar</string>
+    <string name="intervals_resume">Reanudar</string>
+    <string name="intervals_reset">Reset</string>
+
+    <string name="steps_today">STEPS TODAY</string>
+    <string name="athlete_profile">ATHLETE PROFILE</string>
+    <string name="workout_time">WORKOUT TIME</string>
+    <string name="round_label">ROUND</string>
+    <string name="ready_to">READY TO</string>
+    <string name="training_q">TRAINING?</string>
+
+    <!-- Otros -->
+    <string name="map_label">MAPA</string>
+
+    <!-- ==== Faltantes para DashboardFragment ==== -->
+    <string name="notif_permission_denied_intervals">Permisos de notificación denegados. No se mostrarán alertas de intervalos.</string>
+    <string name="session_saved_cal_fmt">Sesión guardada: %1$s calorías quemadas</string>
+
+    <!-- Notificaciones de intervalos -->
+    <string name="notif_rest_title">🛑 ¡Tiempo de descanso!</string>
+    <string name="notif_rest_text">Descansa por %1$d minutos.</string>
+    <string name="notif_work_title">🔥 ¡Tiempo de trabajo!</string>
+    <string name="notif_work_text">Trabaja por %1$d minutos.</string>
+    <string name="notif_attention_title">⚠️ ¡Atención!</string>
+    <string name="notif_attention_text">Quedan %1$d segundos de %2$s</string>
+
+    <!-- Otros textos -->
+    <string name="gps_disabled_using_network">GPS desactivado: usando red (menos preciso)</string>
+    <string name="toast_enable_intervals">Activa los intervalos</string>
+    <string name="user_profile_format">%1$s - %2$dkg</string>
+    <string name="interval_phase_work">Trabajo</string>
+    <string name="interval_phase_rest">Descanso</string>
+    <string name="interval_round_format">Ronda %1$d</string>
+
+    <string name="goal_hud_label">Goal: %1$d min · %2$d km</string>
+    <string name="goal_hud_remaining">Remaining: %1$s · %2$.1f km</string>
+    <string name="goal_hud_reached">Goal reached ✔</string>
+
+    <!-- Widget description -->
+    <string name="widget_description">Contador de pasos y reproductor de música fitness</string>
+
+    <string name="interval_training">INTERVAL TRAINING</string>
+    <string name="work_min">Trabajo (min)</string>
+    <string name="rest_min">Descanso (min)</string>
+
+    <!-- Para el texto inicial debajo del contador -->
+    <string name="interval_round_default">Ronda 1</string>
+
+    <!-- Texto del botón Reset en la tarjeta de Intervalos -->
+    <string name="reset">RESET</string>
+    <!-- Si lo prefieres en español: <string name="reset">REINICIAR</string> -->
+    <!-- Goal Tracking -->
+    <string name="goal_tracking_title">GOAL TRACKING</string>
+    <string name="goal_duration_min">Duration (min)</string>
+    <string name="goal_distance_km">Distance (km)</string>
+    <string name="goal_notify">Notify when goal is reached</string>
+    <string name="goal_auto_finish">Auto finish run</string>
+    <string name="goal_reached_title">Goal reached</string>
+    <string name="goal_reached_text">Target met: %1$d min / %2$d km</string>
+
+    <string name="audio_settings_title">Ajustes de audio</string>
+    <string name="expand_collapse">Expandir/Colapsar</string>
+    <string name="music_volume_label">Volumen de música</string>
+    <string name="notif_volume_label">Volumen de notificaciones</string>
+    <string name="auto_volume_label">Volumen automático</string>
+    <string name="auto_volume_hint">Ajusta el volumen según tu actividad (ej. velocidad). Puedes desactivarlo cuando quieras.</string>
+
+    <string name="unit_min_km">min/km</string>
+    <string name="dash">—</string>
+</resources>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crear_cuenta"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="24dp" />
+
+        <EditText
+            android:id="@+id/input_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/correo"
+            android:inputType="textEmailAddress"
+            android:autofillHints="emailAddress"
+            android:backgroundTint="#FFFFFF"
+            android:textColorHint="#B3B3B3"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/input_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/contrasena"
+            android:inputType="textPassword"
+            android:autofillHints="password"
+            android:backgroundTint="#FFFFFF"
+            android:textColorHint="#B3B3B3"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/input_apodo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/apodo"
+            android:inputType="textPersonName"
+            android:backgroundTint="#FFFFFF"
+            android:textColorHint="#B3B3B3"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="24dp" />
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/registrarse"
+            android:background="#4CAF50"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+</ScrollView>

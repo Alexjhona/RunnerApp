@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- El mapa de osmdroid -->
+    <org.osmdroid.views.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Si quieres dejar el banner como overlay (opcional) -->
+    <!--
+    <ImageView
+        android:id="@+id/bannerOverlay"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:src="@drawable/banner"
+        android:layout_gravity="center"
+        android:alpha="0.0"/>
+    -->
+</FrameLayout>
